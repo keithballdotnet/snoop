@@ -1,2 +1,3 @@
-# snoop
-Snoop on gitlab projects
+# Snoop
+
+Dredge gitlab metrics to produce some charts.
