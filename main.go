@@ -97,6 +97,23 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:  "project_merges",
+			Flags: defaultFlags,
+			Usage: "get project merge requests",
+			Action: func(c *cli.Context) error {
+				exitErr := setGit()
+				if exitErr != nil {
+					return exitErr
+				}
+
+				err := getProjectMergeRequest(c.Int("project_id"))
+				if err != nil {
+					return cli.NewExitError("error: "+err.Error(), 1)
+				}
+				return nil
+			},
+		},
 	}
 
 	// // Verify input

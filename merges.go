@@ -8,6 +8,7 @@ import (
 )
 
 func getMergeRequest(pid, mrid int) error {
+
 	mr, resp, err := git.MergeRequests.GetMergeRequest(pid, mrid)
 	if err != nil {
 		return err
@@ -22,6 +23,30 @@ func getMergeRequest(pid, mrid int) error {
 		return fmt.Errorf("error: unable to find project: %v", mr.ProjectID)
 	}
 	fmt.Printf("MR: %s - %s - %v\n", mr.Author.Name, mr.Title, project.Name)
+
+	return nil
+}
+
+func getProjectMergeRequest(pid int) error {
+
+	opts := &gitlab.ListProjectMergeRequestsOptions{
+		State: gitlab.String("all"),
+		ListOptions: gitlab.ListOptions{
+			PerPage: 100,
+			Page:    1,
+		},
+	}
+
+	mrs, resp, err := git.MergeRequests.ListProjectMergeRequests(pid, opts)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("error: got status code: %v", resp.StatusCode)
+	}
+
+	fmt.Printf("mrs: %v\n", mrs)
 
 	return nil
 }
