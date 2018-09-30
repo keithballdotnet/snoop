@@ -107,7 +107,7 @@ func main() {
 					return exitErr
 				}
 
-				err := getProjectMergeRequest(c.Int("project_id"))
+				err := getProjectMergeRequests(c.Int("project_id"))
 				if err != nil {
 					return cli.NewExitError("error: "+err.Error(), 1)
 				}

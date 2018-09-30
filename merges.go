@@ -28,7 +28,12 @@ func getMergeRequest(pid, mrid int) error {
 	return nil
 }
 
-func getProjectMergeRequest(pid int) error {
+func getProjectMergeRequests(pid int) error {
+
+	project, err := getProject(pid)
+	if err != nil {
+		return err
+	}
 
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State: gitlab.String("all"),
@@ -112,7 +117,7 @@ func getProjectMergeRequest(pid int) error {
 
 	fmt.Printf("Total MRs: %v Open: %v Closed: %v Merged: %v\n", len(allMRS), open, closed, merged)
 
-	return nil
+	return getProjectMergeRequestsChart(project, db)
 }
 
 type weeklyMergeRequestInfo struct {

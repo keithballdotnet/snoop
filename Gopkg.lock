@@ -2,6 +2,15 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/golang/freetype"
+  packages = [
+    "raster",
+    "truetype"
+  ]
+  revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
+
+[[projects]]
   name = "github.com/golang/protobuf"
   packages = ["proto"]
   revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
@@ -20,10 +29,34 @@
   version = "v1.20.0"
 
 [[projects]]
+  name = "github.com/wcharczuk/go-chart"
+  packages = [
+    ".",
+    "drawing",
+    "matrix",
+    "roboto",
+    "seq",
+    "util"
+  ]
+  revision = "7c3982fe3d8ab0c9eea9ab5d2aced51e45d447bc"
+  version = "v2.0.1"
+
+[[projects]]
   name = "github.com/xanzy/go-gitlab"
   packages = ["."]
   revision = "0e1a0aad2f7404e9ad14018b02315af5c2f12ffb"
   version = "v0.11.1"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/image"
+  packages = [
+    "draw",
+    "font",
+    "math/f64",
+    "math/fixed"
+  ]
+  revision = "991ec62608f3c0da01d400756917825d1e2fd528"
 
 [[projects]]
   branch = "master"
@@ -60,6 +93,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ddc2a119e8441d6d41306e1d4dcb474c33a068d12ebbbee1b240c49dd2c80b6c"
+  inputs-digest = "88634ebc873f64d4a092d4fb4a285e12dad5b082ccbaa0f537faff1913ce802b"
   solver-name = "gps-cdcl"
   solver-version = 1
