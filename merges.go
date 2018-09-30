@@ -8,7 +8,6 @@ import (
 )
 
 func getMergeRequest(pid, mrid int) error {
-	//156, 55
 	mr, resp, err := git.MergeRequests.GetMergeRequest(pid, mrid)
 	if err != nil {
 		return err
@@ -27,13 +26,13 @@ func getMergeRequest(pid, mrid int) error {
 	return nil
 }
 
-func getMergeRequestCommits() error {
+func getMergeRequestCommits(pid, mrid int) error {
 
 	allCommits := []*gitlab.Commit{}
 
 	opts := &gitlab.GetMergeRequestCommitsOptions{PerPage: 100, Page: 1}
 
-	commits, resp, err := git.MergeRequests.GetMergeRequestCommits(154, 32, opts)
+	commits, resp, err := git.MergeRequests.GetMergeRequestCommits(pid, mrid, opts)
 	if err != nil {
 		return err
 	}
@@ -126,11 +125,6 @@ func generateReport(commits []*gitlab.Commit) {
 	}
 	fmt.Printf("Total Work Days: %v\n", len(workDays))
 	fmt.Printf("Total FTE Days: %v\n", fte)
-
-	// firstCommitTime := commits[0].CommittedDate
-	// lastCommitTime := commits[len(commits)-1].CommittedDate
-	// calendarDays := lastCommitTime.Sub(*firstCommitTime).Hours()
-	// fmt.Printf("Total Calendar Days: %v\n", calendarDays)
 
 }
 
