@@ -46,7 +46,44 @@ func getProjectMergeRequest(pid int) error {
 		return fmt.Errorf("error: got status code: %v", resp.StatusCode)
 	}
 
-	fmt.Printf("mrs: %v\n", mrs)
+	allMRS := mrs
+
+	for page := 2; page <= resp.TotalPages; page++ {
+		opts.Page = page
+		mrs, resp, err := git.MergeRequests.ListProjectMergeRequests(pid, opts)
+		if err != nil {
+			return err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("error: got status code: %v", resp.StatusCode)
+		}
+
+		for _, m := range mrs {
+			allMRS = append(allMRS, m)
+		}
+	}
+
+	open := 0
+	closed := 0
+	merged := 0
+
+	for _, m := range allMRS {
+		ttl := int(m.UpdatedAt.Sub(*m.CreatedAt).Hours() / 24)
+		fmt.Printf("MR: %s - %v days - %s - WIP:%v\n", m.Title, ttl, m.State, m.WorkInProgress)
+		switch m.State {
+		case "merged":
+			merged++
+			break
+		case "closed":
+			closed++
+			break
+		default:
+			open++
+		}
+	}
+
+	fmt.Printf("Total MRs: %v Open: %v Closed: %v Merged: %v\n", len(allMRS), open, closed, merged)
 
 	return nil
 }
