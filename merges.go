@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"sort"
 
 	gitlab "github.com/xanzy/go-gitlab"
 )
@@ -68,24 +69,56 @@ func getProjectMergeRequest(pid int) error {
 	closed := 0
 	merged := 0
 
+	db := make(map[string]weeklyMergeRequestInfo)
+
 	for _, m := range allMRS {
-		ttl := int(m.UpdatedAt.Sub(*m.CreatedAt).Hours() / 24)
-		fmt.Printf("MR: %s - %v days - %s - WIP:%v\n", m.Title, ttl, m.State, m.WorkInProgress)
+		//ttl := int(m.UpdatedAt.Sub(*m.CreatedAt).Hours() / 24)
+		year, week := m.UpdatedAt.ISOWeek()
+		key := fmt.Sprintf("%v %v", year, week)
+		//fmt.Printf("MR: %s - %v days - %s - ISOWeek:%v %v\n", m.Title, ttl, m.State, year, week)
+		entry, ok := db[key]
+		if !ok {
+			entry = weeklyMergeRequestInfo{}
+		}
+
 		switch m.State {
 		case "merged":
 			merged++
+			entry.CountOfMerged++
 			break
 		case "closed":
 			closed++
+			entry.CountOfClosed++
 			break
 		default:
 			open++
+			entry.CountOfOpened++
 		}
+		db[key] = entry
+	}
+
+	// Sort the keys, so output is nice
+	var keys []string
+	for k := range db {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		entry := db[key]
+		total := entry.CountOfOpened + entry.CountOfClosed + entry.CountOfMerged
+		fmt.Printf("Week#: %s, Total: %v Open: %v Closed: %v Merged: %v\n", key, total, entry.CountOfOpened, entry.CountOfClosed, entry.CountOfMerged)
 	}
 
 	fmt.Printf("Total MRs: %v Open: %v Closed: %v Merged: %v\n", len(allMRS), open, closed, merged)
 
 	return nil
+}
+
+type weeklyMergeRequestInfo struct {
+	CountOfMerged int
+	CountOfClosed int
+	CountOfOpened int
 }
 
 func getMergeRequestCommits(pid, mrid int) error {
