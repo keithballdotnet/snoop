@@ -74,7 +74,7 @@ func getProjectMergeRequest(pid int) error {
 	for _, m := range allMRS {
 		//ttl := int(m.UpdatedAt.Sub(*m.CreatedAt).Hours() / 24)
 		year, week := m.UpdatedAt.ISOWeek()
-		key := fmt.Sprintf("%v %v", year, week)
+		key := fmt.Sprintf("%v %02d", year, week)
 		//fmt.Printf("MR: %s - %v days - %s - ISOWeek:%v %v\n", m.Title, ttl, m.State, year, week)
 		entry, ok := db[key]
 		if !ok {
