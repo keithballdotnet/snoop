@@ -29,7 +29,7 @@ func getMergeRequest(pid, mrid int) error {
 	return nil
 }
 
-func getProjectMergeRequests(pid int, updatedAfter *time.Time) error {
+func getProjectMergeRequests(pid int, branch *string, updatedAfter *time.Time) error {
 
 	project, err := getProject(pid)
 	if err != nil {
@@ -39,6 +39,7 @@ func getProjectMergeRequests(pid int, updatedAfter *time.Time) error {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("all"),
 		UpdatedAfter: updatedAfter,
+		TargetBranch: branch,
 		ListOptions: gitlab.ListOptions{
 			PerPage: 100,
 			Page:    1,

@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/snabb/isoweek"
 	"github.com/urfave/cli"
 	gitlab "github.com/xanzy/go-gitlab"
 )
@@ -104,10 +105,14 @@ func main() {
 		},
 		{
 			Name: "project_merges",
-			Flags: append(defaultFlags,
+			Flags: append(append(defaultFlags,
 				cli.IntFlag{
 					Name:  "weeks, w",
 					Usage: "# of weeks to go back",
+				}),
+				cli.StringFlag{
+					Name:  "branch, b",
+					Usage: "target branch of MRs",
 				}),
 			Usage: "get project merge requests",
 			Action: func(c *cli.Context) error {
@@ -120,11 +125,19 @@ func main() {
 				if c.IsSet("weeks") {
 					dur := time.Duration(time.Duration(c.Int("weeks")) * 7 * 24 * time.Hour)
 					t := time.Now().Add(-dur)
+					// Go to start of that ISO week...
+					yr, wk := t.ISOWeek()
+					t = isoweek.StartTime(yr, wk, time.UTC)
 					updateAfter = &t
 					//fmt.Printf("Going to use: %s\n", updateAfter.String())
 				}
 
-				err := getProjectMergeRequests(c.Int("project_id"), updateAfter)
+				branch := new(string)
+				if c.IsSet("branch") {
+					*branch = c.String("branch")
+				}
+
+				err := getProjectMergeRequests(c.Int("project_id"), branch, updateAfter)
 				if err != nil {
 					return cli.NewExitError("error: "+err.Error(), 1)
 				}

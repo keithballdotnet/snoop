@@ -23,6 +23,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/snabb/isoweek"
+  packages = ["."]
+  revision = "b3589362e8c4a4b08d2e08b131188b592222b375"
+
+[[projects]]
   name = "github.com/urfave/cli"
   packages = ["."]
   revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
@@ -92,6 +98,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "37f9ef1d7c8390cd8f2939f4bdbcf2ecb459b6e35d6c22d255cb09bad0f186fc"
+  inputs-digest = "fbea198dc1e7c559e2e1c32441fcd026d6690fe30e6f05d4864f072bb6b7d7ad"
   solver-name = "gps-cdcl"
   solver-version = 1

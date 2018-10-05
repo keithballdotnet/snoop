@@ -38,7 +38,8 @@ func getProjectMergeRequestsChart(project *gitlab.Project, db map[string]weeklyM
 		TitleStyle: chart.StyleShow(),
 		Background: chart.Style{
 			Padding: chart.Box{
-				Top: 40,
+				Top:    40,
+				Bottom: 40,
 			},
 		},
 		Height:   512,
