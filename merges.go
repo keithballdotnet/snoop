@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
+	"time"
 
 	gitlab "github.com/xanzy/go-gitlab"
 )
@@ -28,7 +29,7 @@ func getMergeRequest(pid, mrid int) error {
 	return nil
 }
 
-func getProjectMergeRequests(pid int) error {
+func getProjectMergeRequests(pid int, updatedAfter *time.Time) error {
 
 	project, err := getProject(pid)
 	if err != nil {
@@ -36,7 +37,8 @@ func getProjectMergeRequests(pid int) error {
 	}
 
 	opts := &gitlab.ListProjectMergeRequestsOptions{
-		State: gitlab.String("all"),
+		State:        gitlab.String("all"),
+		UpdatedAfter: updatedAfter,
 		ListOptions: gitlab.ListOptions{
 			PerPage: 100,
 			Page:    1,

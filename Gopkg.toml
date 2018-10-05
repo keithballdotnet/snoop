@@ -39,4 +39,4 @@
 
 [[constraint]]
   name = "github.com/wcharczuk/go-chart"
-  version = "2.0.1"
+  revision = "828d1952d8991e92ded7a66154cb3e8f7b8190ff"

@@ -38,8 +38,7 @@
     "seq",
     "util"
   ]
-  revision = "7c3982fe3d8ab0c9eea9ab5d2aced51e45d447bc"
-  version = "v2.0.1"
+  revision = "828d1952d8991e92ded7a66154cb3e8f7b8190ff"
 
 [[projects]]
   name = "github.com/xanzy/go-gitlab"
@@ -93,6 +92,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "88634ebc873f64d4a092d4fb4a285e12dad5b082ccbaa0f537faff1913ce802b"
+  inputs-digest = "37f9ef1d7c8390cd8f2939f4bdbcf2ecb459b6e35d6c22d255cb09bad0f186fc"
   solver-name = "gps-cdcl"
   solver-version = 1

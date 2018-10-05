@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/urfave/cli"
 	gitlab "github.com/xanzy/go-gitlab"
@@ -50,16 +51,16 @@ func main() {
 			Name:  "project_id, p",
 			Usage: "project id",
 		},
-		cli.StringFlag{
-			Name:  "merge_id, m",
-			Usage: "merge request id",
-		},
 	}
 
 	app.Commands = []cli.Command{
 		{
-			Name:  "merge",
-			Flags: defaultFlags,
+			Name: "merge",
+			Flags: append(defaultFlags,
+				cli.StringFlag{
+					Name:  "merge_id, m",
+					Usage: "merge request id",
+				}),
 			Usage: "get merge info",
 			Action: func(c *cli.Context) error {
 
@@ -79,8 +80,12 @@ func main() {
 			},
 		},
 		{
-			Name:  "merge_commits",
-			Flags: defaultFlags,
+			Name: "merge_commits",
+			Flags: append(defaultFlags,
+				cli.StringFlag{
+					Name:  "merge_id, m",
+					Usage: "merge request id",
+				}),
 			Usage: "get merge commits",
 			Action: func(c *cli.Context) error {
 
@@ -98,8 +103,12 @@ func main() {
 			},
 		},
 		{
-			Name:  "project_merges",
-			Flags: defaultFlags,
+			Name: "project_merges",
+			Flags: append(defaultFlags,
+				cli.IntFlag{
+					Name:  "weeks, w",
+					Usage: "# of weeks to go back",
+				}),
 			Usage: "get project merge requests",
 			Action: func(c *cli.Context) error {
 				exitErr := setGit()
@@ -107,7 +116,15 @@ func main() {
 					return exitErr
 				}
 
-				err := getProjectMergeRequests(c.Int("project_id"))
+				var updateAfter *time.Time
+				if c.IsSet("weeks") {
+					dur := time.Duration(time.Duration(c.Int("weeks")) * 7 * 24 * time.Hour)
+					t := time.Now().Add(-dur)
+					updateAfter = &t
+					//fmt.Printf("Going to use: %s\n", updateAfter.String())
+				}
+
+				err := getProjectMergeRequests(c.Int("project_id"), updateAfter)
 				if err != nil {
 					return cli.NewExitError("error: "+err.Error(), 1)
 				}

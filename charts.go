@@ -21,10 +21,14 @@ func getProjectMergeRequestsChart(project *gitlab.Project, db map[string]weeklyM
 
 	values := []chart.Value{}
 
+	maxValue := 1
 	for _, key := range keys {
 		entry := db[key]
 		total := /*entry.CountOfOpened + entry.CountOfClosed +*/ entry.CountOfMerged
 		values = append(values, chart.Value{Value: float64(total), Label: key})
+		if total > maxValue {
+			maxValue = total
+		}
 	}
 
 	chartWidth := (50 * len(db)) + 150
@@ -46,6 +50,10 @@ func getProjectMergeRequestsChart(project *gitlab.Project, db map[string]weeklyM
 		YAxis: chart.YAxis{
 			Style: chart.Style{
 				Show: true,
+			},
+			Range: &chart.ContinuousRange{
+				Min: 0,
+				Max: float64(maxValue),
 			},
 		},
 		Bars: values,
